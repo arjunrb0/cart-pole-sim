@@ -1,5 +1,7 @@
 # Inverted Pendulum Control Simulator
 
+**[▶ Try it live](https://arjunrb0.github.io/cart-pole-sim/)**: runs in the browser, nothing to install.
+
 An interactive cart-pole simulator built from first principles: derived equations of motion, an RK4 integrator, a cascaded PID controller, and an LQR controller with a hand-written Riccati solver. You can tune both live, shove the pendulum with the mouse, and benchmark them against each other on identical scenarios.
 
 Vanilla JavaScript and HTML Canvas, built with Vite. No physics, control or maths libraries: every equation is in the source, and every claim below is checked by the test suite.
