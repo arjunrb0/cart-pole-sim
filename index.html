@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inverted Pendulum Control Simulator</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Inverted Pendulum</h1>
+        <p class="subtitle">Cart-pole balancing &mdash; PID and LQR control</p>
+      </header>
+
+      <div class="toolbar">
+        <span id="status" class="status" data-status="running">Running</span>
+        <div class="switch" role="group" aria-label="Controller">
+          <button type="button" data-controller="PID" aria-pressed="true">PID</button>
+          <button type="button" data-controller="LQR" aria-pressed="false">LQR</button>
+        </div>
+        <div class="readouts" aria-live="off">
+          <span>t <b id="ro-t">0.00</b> s</span>
+          <span>x <b id="ro-x">0.000</b> m</span>
+          <span>θ <b id="ro-theta">0.00</b>°</span>
+          <span>u <b id="ro-u">0.0</b> N</span>
+          <span id="ro-settle" class="settle" data-settled="false">settling…</span>
+        </div>
+        <div class="buttons">
+          <button id="btn-pause" type="button">Pause</button>
+          <button id="btn-reset" type="button">Reset</button>
+          <button id="btn-defaults" type="button">Defaults</button>
+        </div>
+      </div>
+
+      <canvas id="scene" aria-label="Cart-pole simulation. Drag the ball at the tip of the pole, or click elsewhere to tap it."></canvas>
+      <p class="hint">
+        <b>Drag</b> the ball at the pole's tip to push it around &middot; <b>click</b> anywhere else to tap it
+        &middot; <kbd>Space</kbd> pause &middot; <kbd>R</kbd> reset
+      </p>
+
+      <canvas id="plot" aria-label="Plot of pole angle, cart position and motor force over the last 10 seconds"></canvas>
+      <p class="hint">Last 10 seconds. Each lane rescales to fit what it is showing; the green dashed line is the target position.</p>
+
+      <section id="panel"></section>
+
+      <section class="comparison-section" aria-labelledby="cmp-title">
+        <h2 id="cmp-title">PID vs LQR</h2>
+        <div id="comparison"></div>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

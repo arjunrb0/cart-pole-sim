@@ -1,0 +1,452 @@
+:root {
+  --bg: #11161f;
+  --panel: #1a2130;
+  --panel-edge: #2a3242;
+  --ink: #e6ebf2;
+  --muted: #8f9bb0;
+  --faint: #6b768a;
+  --accent: #5b7fd4;
+  --ok: #5fbf8a;
+  --warn: #e0a24a;
+  --bad: #c4564a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 2rem 1rem;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+main {
+  max-width: 940px;
+  margin: 0 auto;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  margin: 0.25rem 0 1.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* --- toolbar ------------------------------------------------------------ */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+}
+.status[data-status="running"] {
+  color: var(--ok);
+}
+.status[data-status="paused"] {
+  color: var(--warn);
+}
+.status[data-status="failed"] {
+  color: var(--bad);
+}
+
+.readouts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.readouts b {
+  display: inline-block;
+  min-width: 3.6em;
+  text-align: right;
+  color: var(--ink);
+  font-weight: 500;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+button {
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 6px;
+  padding: 0.35rem 0.8rem;
+  cursor: pointer;
+}
+button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+button:focus-visible,
+input[type="range"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* --- canvases ------------------------------------------------------------ */
+canvas {
+  display: block;
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 10px;
+}
+
+#scene {
+  aspect-ratio: 900 / 420;
+  /* Stop touch-drags from scrolling the page instead of moving the pole. */
+  touch-action: none;
+  cursor: pointer;
+}
+
+#plot {
+  height: 190px;
+  margin-top: 1rem;
+}
+
+.hint {
+  margin: 0.5rem 0 0;
+  color: var(--faint);
+  font-size: 0.8rem;
+}
+kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  padding: 0 0.3rem;
+  border: 1px solid var(--panel-edge);
+  border-radius: 4px;
+  color: var(--muted);
+}
+
+/* --- slider panel -------------------------------------------------------- */
+#panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.group {
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 10px;
+  padding: 0.9rem 1rem 0.4rem;
+}
+
+.group-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.group-note {
+  margin: 0.2rem 0 0.6rem;
+  color: var(--faint);
+  font-size: 0.78rem;
+}
+
+.slider {
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.slider-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.slider-label {
+  color: var(--muted);
+}
+
+.slider-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.slider input[type="range"] {
+  width: 100%;
+  margin: 0.3rem 0 0.1rem;
+  accent-color: var(--accent);
+}
+
+.slider-hint {
+  display: block;
+  color: var(--faint);
+  font-size: 0.72rem;
+}
+
+@media (max-width: 560px) {
+  body {
+    padding: 1.25rem 1rem;
+  }
+  .buttons {
+    margin-left: 0;
+  }
+}
+
+/* --- controller switch (segmented) --------------------------------------- */
+.switch {
+  display: inline-flex;
+  border: 1px solid var(--panel-edge);
+  border-radius: 7px;
+  overflow: hidden;
+}
+.switch button {
+  border: 0;
+  border-radius: 0;
+  padding: 0.3rem 0.85rem;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+}
+.switch button + button {
+  border-left: 1px solid var(--panel-edge);
+}
+.switch button[aria-pressed="true"] {
+  background: var(--accent);
+  color: #fff;
+}
+
+.readouts .settle {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.readouts .settle[data-settled="true"] {
+  color: var(--ink);
+}
+
+/* --- LQR extras + analysis box ------------------------------------------- */
+.copy-gains {
+  width: 100%;
+  margin: 0.2rem 0 0.3rem;
+}
+.copy-gains + .slider-hint {
+  margin-bottom: 0.75rem;
+}
+
+.analysis dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 0.75rem;
+  margin: 0.5rem 0 0.75rem;
+  font-size: 0.8rem;
+}
+.analysis dt {
+  color: var(--muted);
+}
+.analysis dd {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.76rem;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.analysis [hidden] {
+  display: none;
+}
+
+/* --- comparison section -------------------------------------------------- */
+.comparison-section {
+  margin-top: 1.5rem;
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 10px;
+  padding: 1rem;
+}
+.comparison-section h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+}
+
+.cmp-head {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.cmp-intro {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+.cmp-run {
+  border-color: var(--accent);
+}
+
+.cmp-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.9rem 0 0.5rem;
+}
+.cmp-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.cmp-tab {
+  font-size: 0.78rem;
+  padding: 0.25rem 0.6rem;
+  color: var(--muted);
+}
+.cmp-tab[aria-selected="true"] {
+  color: var(--ink);
+  border-color: var(--accent);
+  background: #222b3d;
+}
+.cmp-legend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--ink);
+}
+.cmp-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.line-key {
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.cmp-chart-wrap {
+  position: relative;
+}
+.cmp-chart {
+  height: 430px;
+  background: var(--panel);
+  border-color: var(--panel-edge);
+}
+.cmp-chart:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.cmp-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: #10151e;
+  border: 1px solid var(--panel-edge);
+  border-radius: 6px;
+  padding: 0.4rem 0.55rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+.cmp-tip-time {
+  color: var(--muted);
+  margin-bottom: 0.2rem;
+}
+.cmp-tip-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.cmp-tip-name {
+  color: var(--muted);
+  min-width: 2.2em;
+}
+.cmp-tip-row b {
+  font-weight: 600;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+  min-width: 5.5em;
+  text-align: right;
+}
+.cmp-tip-ended {
+  color: var(--faint);
+}
+
+.cmp-table-wrap {
+  overflow-x: auto;
+  margin-top: 0.9rem;
+}
+.cmp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.cmp-table th,
+.cmp-table td {
+  padding: 0.4rem 0.55rem;
+  border-bottom: 1px solid var(--panel-edge);
+  text-align: right;
+  white-space: nowrap;
+}
+.cmp-table th {
+  color: var(--muted);
+  font-weight: 500;
+}
+.cmp-table th.group {
+  text-align: center;
+  color: var(--ink);
+}
+.cmp-table th.sub {
+  font-size: 0.72rem;
+}
+.cmp-table td.scenario,
+.cmp-table th:first-child {
+  text-align: left;
+}
+.cmp-table td.num {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+.cmp-table td.best {
+  font-weight: 700;
+  color: var(--ink);
+}
+.cmp-table tbody tr {
+  cursor: pointer;
+}
+.cmp-table tbody tr:hover,
+.cmp-table tbody tr.is-selected {
+  background: #212a3b;
+}
+.cmp-table tbody tr:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.cmp-note {
+  margin: 0.5rem 0 0;
+  color: var(--faint);
+  font-size: 0.75rem;
+}
